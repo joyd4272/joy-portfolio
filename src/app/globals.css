@@ -1,0 +1,624 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f3eee5;
+  --surface: #ffffff;
+  --foreground: #111111;
+  --foreground-muted: #4a4a4a;
+  --foreground-soft: #6b6b6b;
+  --border: #e6dfd1;
+  --accent: #ff5b1f;
+
+  --card-builder: #ffd6cc;
+  --card-bookit: #cfd9ff;
+  --card-wayfinder: #b9e3a6;
+  --card-clarity: #f1ece0;
+  --card-signage: #d9f25b;
+  --card-one: #ff5b1f;
+
+  --dark-bg: #0a0a0a;
+  --dark-surface: #161616;
+  --dark-foreground: #f5f1ea;
+  --dark-muted: #a8a39b;
+  --dark-border: #2a2a2a;
+
+  --cta-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cta-duration: 420ms;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-soft: var(--foreground-soft);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+
+  --color-card-builder: var(--card-builder);
+  --color-card-bookit: var(--card-bookit);
+  --color-card-wayfinder: var(--card-wayfinder);
+  --color-card-clarity: var(--card-clarity);
+  --color-card-signage: var(--card-signage);
+  --color-card-one: var(--card-one);
+
+  --color-dark-bg: var(--dark-bg);
+  --color-dark-surface: var(--dark-surface);
+  --color-dark-foreground: var(--dark-foreground);
+  --color-dark-muted: var(--dark-muted);
+  --color-dark-border: var(--dark-border);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-geist-sans);
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+  color: #2a2a2a;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.tag-dark {
+  color: var(--dark-foreground);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Auto-scrolling marquee strip. The track is rendered twice, so when
+   the first copy scrolls out the second is already in place. */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation-duration: 90s;
+  }
+}
+
+/* Nav link hover — text fly-up + bracket spread.
+   Easing curve is a near-match to GSAP's power3.inOut for that smooth,
+   slightly-anticipated feel. */
+.nav-link {
+  --nav-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --nav-duration: 480ms;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  isolation: isolate;
+}
+
+.nav-link__bracket {
+  display: inline-block;
+  color: var(--foreground-soft);
+  transition: transform var(--nav-duration) var(--nav-ease),
+    color var(--nav-duration) var(--nav-ease);
+}
+
+.nav-link:hover .nav-link__bracket--left,
+.nav-link:focus-visible .nav-link__bracket--left {
+  transform: translateX(-3px);
+  color: var(--accent);
+}
+
+.nav-link:hover .nav-link__bracket--right,
+.nav-link:focus-visible .nav-link__bracket--right {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+.nav-link__text {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.2;
+}
+
+.nav-link__text > span {
+  display: block;
+  transition: transform var(--nav-duration) var(--nav-ease),
+    color var(--nav-duration) var(--nav-ease);
+  will-change: transform;
+}
+
+.nav-link__text > span.is-clone {
+  position: absolute;
+  inset: 0;
+  transform: translateY(110%);
+  color: var(--accent);
+}
+
+.nav-link:hover .nav-link__text > span:not(.is-clone),
+.nav-link:focus-visible .nav-link__text > span:not(.is-clone) {
+  transform: translateY(-110%);
+}
+
+.nav-link:hover .nav-link__text > span.is-clone,
+.nav-link:focus-visible .nav-link__text > span.is-clone {
+  transform: translateY(0%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link__bracket,
+  .nav-link__text > span {
+    transition: none;
+  }
+  .nav-link:hover .nav-link__text > span:not(.is-clone),
+  .nav-link:focus-visible .nav-link__text > span:not(.is-clone) {
+    transform: none;
+  }
+  .nav-link:hover .nav-link__text > span.is-clone,
+  .nav-link:focus-visible .nav-link__text > span.is-clone {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ====== Skills section scroll reveal ====== */
+/* Choreographed reveal triggered by IntersectionObserver setting
+   data-visible="true" on the section. The reveal has multiple layers:
+   - Heading words: 3D flip-up from -90deg rotateX with perspective
+   - Section label + intro: slide up + fade
+   - Per row:
+       - Big ghost number scales in behind the row content
+       - Number label slides in from the left
+       - Title characters cascade in one by one from above
+       - Body text slides in from the left + fades
+       - Tags fly in from the right with a slight overshoot
+       - Divider line sweeps in from the left as accent color, then settles. */
+
+.skills-section {
+  --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --reveal-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+  perspective: 1200px;
+}
+
+/* ---- Hidden states ---- */
+
+.skills-section .skills-label {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms var(--reveal-ease),
+    transform 600ms var(--reveal-ease);
+}
+
+.skills-section .skills-intro {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 700ms var(--reveal-ease),
+    transform 700ms var(--reveal-ease);
+}
+
+/* Heading words: 3D rotate up — flip from behind the baseline with
+   perspective so it feels like the words are physically standing up. */
+.skills-section .reveal-word {
+  display: inline-block;
+  vertical-align: bottom;
+  line-height: inherit;
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+
+.skills-section .reveal-word__inner {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  transform: rotateX(-92deg) translateY(40%);
+  opacity: 0;
+  transition: transform 850ms var(--reveal-ease),
+    opacity 500ms var(--reveal-ease);
+  transition-delay: calc(var(--w, 0) * 65ms);
+}
+
+/* Row container needs to allow the ghost number to bleed if needed,
+   but we clip inside the section padding for safety. */
+.skills-row {
+  position: relative;
+}
+
+.skills-row__num {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 600ms var(--reveal-ease),
+    transform 600ms var(--reveal-ease);
+}
+
+/* Title splits into characters which cascade in from above. */
+.skills-row__title-inner {
+  display: inline-block;
+}
+
+.skills-row__char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-70%) rotate(-8deg);
+  transition: opacity 500ms var(--reveal-ease),
+    transform 600ms var(--reveal-overshoot);
+}
+
+.skills-row__body {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 700ms var(--reveal-ease),
+    transform 700ms var(--reveal-ease);
+}
+
+/* Tags fly in from the right with a slight overshoot bounce. */
+.skills-row__tag {
+  opacity: 0;
+  transform: translateX(40px) scale(0.85);
+  transition: opacity 450ms var(--reveal-ease),
+    transform 550ms var(--reveal-overshoot);
+}
+
+/* Animated row dividers — replace Tailwind's divide-y with a custom line
+   that sweeps in (accent color first, then settles to grey). */
+.skills-section ul.divide-y > li {
+  border-top: 0 !important;
+}
+
+.skills-section ul > li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 800ms var(--reveal-ease),
+    background 600ms var(--reveal-ease) 800ms;
+}
+
+.skills-section ul > li:first-child::before {
+  display: none;
+}
+
+/* ---- Revealed state ---- */
+
+.skills-section[data-visible="true"] .skills-label {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 80ms;
+}
+
+.skills-section[data-visible="true"] .skills-intro {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 380ms;
+}
+
+.skills-section[data-visible="true"] .reveal-word__inner {
+  opacity: 1;
+  transform: rotateX(0deg) translateY(0);
+}
+
+.skills-section[data-visible="true"] .skills-row__num {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: calc(620ms + var(--r, 0) * 80ms);
+}
+
+.skills-section[data-visible="true"] .skills-row__char {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg);
+  transition-delay: calc(700ms + var(--r, 0) * 80ms + var(--c, 0) * 18ms);
+}
+
+.skills-section[data-visible="true"] .skills-row__body {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: calc(820ms + var(--r, 0) * 80ms);
+}
+
+.skills-section[data-visible="true"] .skills-row__tag {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  transition-delay: calc(900ms + var(--r, 0) * 80ms + var(--t, 0) * 60ms);
+}
+
+.skills-section[data-visible="true"] ul > li::before {
+  transform: scaleX(1);
+  background: var(--border);
+  transition-delay: calc(500ms + var(--r, 0) * 80ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-section .skills-label,
+  .skills-section .skills-intro,
+  .skills-section .skills-row__num,
+  .skills-section .skills-row__body,
+  .skills-section .skills-row__tag,
+  .skills-section .skills-row__char,
+  .skills-section .reveal-word__inner,
+  .skills-section ul > li::before {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .skills-section ul.divide-y > li {
+    border-top: 1px solid var(--border) !important;
+  }
+}
+
+/* ====== Hero scroll-divergence ====== */
+/* The Hero section sets a --hero-progress custom property (0 → 1) based on
+   scroll position. The two panes translate in opposite directions so the
+   composition splits open as the user scrolls past. */
+.hero-pane-left,
+.hero-pane-right {
+  will-change: transform;
+}
+
+.hero-pane-left {
+  transform: translate3d(calc(var(--hero-progress, 0) * -120px), 0, 0);
+}
+
+.hero-pane-right {
+  transform: translate3d(calc(var(--hero-progress, 0) * 120px), 0, 0);
+}
+
+/* Disable on small screens — translating 120px on a 390px viewport is too much
+   and pushes content offscreen. */
+@media (max-width: 767px) {
+  .hero-pane-left,
+  .hero-pane-right {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pane-left,
+  .hero-pane-right {
+    transform: none;
+  }
+}
+
+/* ====== Journey scroll-divergence ====== */
+/* Same idea as the Hero, applied per row. The date + role + company columns
+   drift left while the bullets drift right as the user scrolls through the
+   experience section. Magnitude is slightly smaller because Journey is a
+   long section — large translations sustained across many rows would feel
+   exhausting. */
+.journey-pane-left,
+.journey-pane-right {
+  will-change: transform;
+}
+
+.journey-pane-left {
+  transform: translate3d(calc(var(--journey-progress, 0) * -80px), 0, 0);
+}
+
+.journey-pane-right {
+  transform: translate3d(calc(var(--journey-progress, 0) * 80px), 0, 0);
+}
+
+@media (max-width: 767px) {
+  .journey-pane-left,
+  .journey-pane-right {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-pane-left,
+  .journey-pane-right {
+    transform: none;
+  }
+}
+
+/* ====== CTA animation primitives ====== */
+/* Shared easing — close to GSAP power3.out for that responsive, snappy feel.
+   Variables --cta-ease and --cta-duration are defined in the :root block above. */
+
+/* ---- "Let's talk" pill: arrow takes off ----
+   The whole pill lifts. The circle holding the arrow slides slightly right
+   AND the arrow inside rotates 45° to point up-right, like a "send-off". */
+.cta-talk {
+  transition: transform var(--cta-duration) var(--cta-ease),
+    box-shadow var(--cta-duration) var(--cta-ease);
+}
+
+.cta-talk:hover,
+.cta-talk:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px -12px rgba(255, 91, 31, 0.45);
+}
+
+.cta-talk__chip {
+  transition: transform var(--cta-duration) var(--cta-ease),
+    background-color var(--cta-duration) var(--cta-ease);
+}
+
+.cta-talk:hover .cta-talk__chip,
+.cta-talk:focus-visible .cta-talk__chip {
+  transform: translateX(4px);
+  background-color: var(--accent);
+  color: #000;
+}
+
+.cta-talk__arrow {
+  transition: transform var(--cta-duration) var(--cta-ease);
+}
+
+.cta-talk:hover .cta-talk__arrow,
+.cta-talk:focus-visible .cta-talk__arrow {
+  transform: rotate(-45deg);
+}
+
+/* ---- "Download résumé.pdf" pill: arrow drops, border brightens ----
+   The down arrow performs a "tick" — translates down, fades briefly,
+   and a fresh arrow appears from the top. Border shifts to white. */
+.cta-download {
+  transition: transform var(--cta-duration) var(--cta-ease),
+    border-color var(--cta-duration) var(--cta-ease),
+    background-color var(--cta-duration) var(--cta-ease);
+  overflow: hidden;
+}
+
+.cta-download:hover,
+.cta-download:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.cta-download__arrow-wrap {
+  position: relative;
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  overflow: hidden;
+}
+
+.cta-download__arrow-wrap > svg {
+  position: absolute;
+  inset: 0;
+  transition: transform var(--cta-duration) var(--cta-ease),
+    opacity var(--cta-duration) var(--cta-ease);
+}
+
+.cta-download__arrow-wrap > svg.is-incoming {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.cta-download:hover .cta-download__arrow-wrap > svg:not(.is-incoming),
+.cta-download:focus-visible .cta-download__arrow-wrap > svg:not(.is-incoming) {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.cta-download:hover .cta-download__arrow-wrap > svg.is-incoming,
+.cta-download:focus-visible .cta-download__arrow-wrap > svg.is-incoming {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ---- "Available for work" header pill ----
+   On hover the green status dot grows + a soft ring pulse expands outward,
+   and the pill itself lifts a touch. */
+.cta-status {
+  transition: transform var(--cta-duration) var(--cta-ease),
+    box-shadow var(--cta-duration) var(--cta-ease);
+}
+
+.cta-status:hover,
+.cta-status:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px -8px rgba(74, 222, 128, 0.45);
+}
+
+.cta-status__dot {
+  transition: transform var(--cta-duration) var(--cta-ease);
+}
+
+.cta-status:hover .cta-status__dot,
+.cta-status:focus-visible .cta-status__dot {
+  transform: scale(1.35);
+}
+
+/* ---- Inline arrow links (e.g., "View full portfolio →") ----
+   Arrow nudges right and the text picks up accent color. */
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color var(--cta-duration) var(--cta-ease);
+}
+
+.cta-link__arrow {
+  display: inline-block;
+  transition: transform var(--cta-duration) var(--cta-ease);
+}
+
+.cta-link:hover,
+.cta-link:focus-visible {
+  color: var(--accent);
+}
+
+.cta-link:hover .cta-link__arrow,
+.cta-link:focus-visible .cta-link__arrow {
+  transform: translateX(6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-talk,
+  .cta-talk__chip,
+  .cta-talk__arrow,
+  .cta-download,
+  .cta-download__arrow-wrap > svg,
+  .cta-status,
+  .cta-status__dot,
+  .cta-link__arrow {
+    transition: none;
+  }
+}
+
+/* Slower variant for the dock pills inside the kit card. */
+.dock-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 22s linear infinite;
+  will-change: transform;
+}
+
+.dock-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-track {
+    animation-duration: 60s;
+  }
+}
