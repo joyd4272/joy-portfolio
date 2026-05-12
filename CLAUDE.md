@@ -5,13 +5,23 @@
 This file is read by Claude (and is useful for any developer/AI assistant picking up this project). It captures intent, decisions, and history so context isn't lost between sessions.
 
 ## What this project is
-Personal portfolio site for Joy Das (UI/UX & Product Designer, Bengaluru → currently working in Pune).
+Personal portfolio site for Joy Das (UI/UX & Product Designer, based in Bengaluru, working remotely).
 - **Figma source of truth:** https://www.figma.com/design/R5K4HpwhqdnJL7mCg8ECff/Joy-Das-%E2%80%94-Portfolio-Resume
 - **Live Webflow portfolio (current site):** https://designnerd-joy.webflow.io/
 - **Old Adobe portfolio:** https://designnerd.myportfolio.com/
 - **Email contact:** joy.d4272@gmail.com
 - **Phone:** +91 8095 624 272
 - **Goal:** Single-page portfolio, fully responsive, content driven from a CMS (Sanity) once design is locked. Deployed on Vercel.
+
+## Hosting (deployed!)
+- **GitHub repo:** https://github.com/joyd4272/joy-portfolio
+  - `main` branch — stable, locked codebase
+  - `deploy/initial` branch — current preview-deploy target
+- **Vercel project:** joy-portfolio (under `joyd4272s-projects`)
+- **Preview URL:** https://joy-portfolio-76xaw2wgj-joyd4272s-projects.vercel.app
+- **Preview alias:** https://joy-portfolio-gamma.vercel.app
+- **Inspect:** https://vercel.com/joyd4272s-projects/joy-portfolio/J7aTVNcCyFg6jC8xNkTL8vtAVQYU
+- **Production:** not promoted yet. Run `vercel --prod` (or promote from the Vercel dashboard) when ready.
 
 ## Stack
 - Next.js 16.2.6 (App Router, Turbopack)

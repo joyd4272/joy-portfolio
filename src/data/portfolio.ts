@@ -284,7 +284,7 @@ export const hobbies = [
 ];
 
 export const socials = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/joy-das-3538a34a/" },
   { label: "Old projects", href: "https://designnerd.myportfolio.com/" },
   { label: "Webflow", href: "https://designnerd-joy.webflow.io/" },
 ];
