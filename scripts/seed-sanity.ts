@@ -40,8 +40,10 @@ import {
   dock, hobbies, socials, nav,
 } from "../src/data/portfolio";
 
-async function seedSingleton(doc: Record<string, unknown>) {
-  const id = doc._id as string;
+type SeedDoc = { _type: string; [key: string]: unknown };
+
+async function seedSingleton(doc: SeedDoc & { _id: string }) {
+  const id = doc._id;
   if (await client.getDocument(id)) {
     console.warn(`⚠  Skipping "${id}" — already exists.`);
     return;
@@ -50,7 +52,7 @@ async function seedSingleton(doc: Record<string, unknown>) {
   console.log(`✓  Created singleton "${id}".`);
 }
 
-async function seedCollection(typeName: string, docs: Record<string, unknown>[]) {
+async function seedCollection(typeName: string, docs: SeedDoc[]) {
   const count: number = await client.fetch(`count(*[_type == $type])`, { type: typeName });
   if (count > 0) {
     console.warn(`⚠  Skipping "${typeName}" — ${count} doc(s) already exist.`);
