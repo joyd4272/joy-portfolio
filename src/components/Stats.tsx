@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { stats } from "@/data/portfolio";
 
-export default function Stats() {
+type StatItem = { value: string; label: string };
+
+export default function Stats({ stats }: { stats: StatItem[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [triggered, setTriggered] = useState(false);
 

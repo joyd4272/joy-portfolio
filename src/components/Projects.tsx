@@ -1,8 +1,29 @@
-import { projects, projectsIntro, profile } from "@/data/portfolio";
+import { sanityClient } from "@/sanity/client";
+import {
+  projects as fallbackProjects,
+  projectsIntro as fallbackIntro,
+  profile as fallbackProfile,
+} from "@/data/portfolio";
 
-type Project = (typeof projects)[number];
+type ProjectItem = {
+  number: string; name: string; category: string; blurb: string;
+  href: string; background: string; foreground: string; arrowBg: string; arrowFg: string;
+};
 
-export default function Projects() {
+const PROJECTS_QUERY = `*[_type == "project"] | order(order asc) { number, name, category, blurb, href, background, foreground, arrowBg, arrowFg }`;
+const INTRO_QUERY    = `*[_type == "siteSettings"][0] { projectsIntro }.projectsIntro`;
+const URL_QUERY      = `*[_type == "profile"][0] { portfolioUrl }.portfolioUrl`;
+
+export default async function Projects() {
+  const [items, intro, portfolioUrl] = await Promise.all([
+    sanityClient.fetch<ProjectItem[]>(PROJECTS_QUERY, {}, { next: { revalidate: 0 } }),
+    sanityClient.fetch<string | null>(INTRO_QUERY, {}, { next: { revalidate: 0 } }),
+    sanityClient.fetch<string | null>(URL_QUERY, {}, { next: { revalidate: 0 } }),
+  ]);
+  const projects      = items.length ? items : fallbackProjects;
+  const projectsIntro = intro ?? fallbackIntro;
+  const portfolioUrl_ = portfolioUrl ?? fallbackProfile.portfolioUrl;
+
   // Editorial rhythm matches the Figma:
   //   Row 1: Builder (2/3) + Book it (1/3)
   //   Row 2: Way Finder + Clarity (50/50)
@@ -28,7 +49,7 @@ export default function Projects() {
           <div className="text-sm text-foreground-muted max-w-sm">
             <p>{projectsIntro}</p>
             <a
-              href={profile.portfolioUrl}
+              href={portfolioUrl_}
               target="_blank"
               rel="noopener noreferrer"
               className="cta-link mt-3 inline-flex items-center text-foreground font-medium"
@@ -68,7 +89,7 @@ function Card({
   project,
   className = "",
 }: {
-  project: Project;
+  project: ProjectItem;
   className?: string;
 }) {
   return (

@@ -13,15 +13,22 @@ Personal portfolio site for Joy Das (UI/UX & Product Designer, based in Bengalur
 - **Phone:** +91 8095 624 272
 - **Goal:** Single-page portfolio, fully responsive, content driven from a CMS (Sanity) once design is locked. Deployed on Vercel.
 
-## Hosting (deployed!)
+## Hosting (deployed)
 - **GitHub repo:** https://github.com/joyd4272/joy-portfolio
-  - `main` branch — stable, locked codebase
-  - `deploy/initial` branch — current preview-deploy target
+  - `main` branch — Production. Stable pre-Sanity Figma-locked build + LinkedIn URL fix.
+  - `feature/sanity-cms` branch — Preview. Sanity CMS integration in progress.
+  - `deploy/initial` branch — retired (superseded by main + feature/sanity-cms).
 - **Vercel project:** joy-portfolio (under `joyd4272s-projects`)
-- **Preview URL:** https://joy-portfolio-76xaw2wgj-joyd4272s-projects.vercel.app
-- **Preview alias:** https://joy-portfolio-gamma.vercel.app
-- **Inspect:** https://vercel.com/joyd4272s-projects/joy-portfolio/J7aTVNcCyFg6jC8xNkTL8vtAVQYU
-- **Production:** not promoted yet. Run `vercel --prod` (or promote from the Vercel dashboard) when ready.
+
+### Production (`main`)
+- **Canonical URL (for CV/job applications):** https://joy-portfolio-joyd4272s-projects.vercel.app
+- Aliases: https://joy-portfolio-gamma.vercel.app · https://joy-portfolio-git-main-joyd4272s-projects.vercel.app
+- Production branch: `main`. Pushes to main auto-deploy as production.
+
+### Preview (`feature/sanity-cms`)
+- **Branch alias (auto-updates on each push):** https://joy-portfolio-git-feature-sanity-cms-joyd4272s-projects.vercel.app
+- Specific deployment: https://joy-portfolio-fihqa5ns2-joyd4272s-projects.vercel.app
+- Studio embedded at `/studio` on this preview. CORS origin needs to be added in Sanity for the preview alias.
 
 ## Stack
 - Next.js 16.2.6 (App Router, Turbopack)
