@@ -15,9 +15,17 @@ Personal portfolio site for Joy Das (UI/UX & Product Designer, based in Bengalur
 
 ## Hosting (deployed)
 - **GitHub repo:** https://github.com/joyd4272/joy-portfolio
-  - `main` branch — Production. Stable pre-Sanity Figma-locked build + LinkedIn URL fix.
-  - `feature/sanity-cms` branch — Preview. Sanity CMS integration in progress.
-  - `deploy/initial` branch — retired (superseded by main + feature/sanity-cms).
+  - `main` branch — Production. Pre-Sanity Figma-locked build. About to be replaced by Sanity-backed version.
+  - `feature/sanity-cms` branch — Preview. **Fully CMS-wired, webhook live, ready to merge.**
+  - `deploy/initial` branch — retired.
+
+## Sanity webhook (live on preview)
+- Endpoint: `/api/revalidate` (verifies signature using `SANITY_WEBHOOK_SECRET`)
+- Sanity webhook URL: preview deployment + `/api/revalidate`
+- API version: `v2025-02-19`
+- Triggers: Create / Update / Delete (not drafts)
+- Vercel Deployment Protection: **disabled** so webhook can reach the route
+- Round-trip latency: 30-60s (due to Sanity CDN cache layer in production). Accepted for portfolio use; could be made <5s by setting `useCdn: false` in `src/sanity/client.ts` if needed later.
 - **Vercel project:** joy-portfolio (under `joyd4272s-projects`)
 
 ### Production (`main`)
