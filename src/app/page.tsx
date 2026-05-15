@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/HeaderLoader";
 import Hero from "@/components/HeroLoader";
 import Marquee from "@/components/Marquee";
 import Stats from "@/components/StatsLoader";
