@@ -5,7 +5,7 @@ const QUERY = `*[_type == "profile"][0] { email, resumeUrl }`;
 
 export default async function CTA() {
   const data = await sanityClient.fetch<{ email: string; resumeUrl: string } | null>(
-    QUERY, {}, { next: { revalidate: 0 } }
+    QUERY, {}, { next: { tags: ["profile"], revalidate: false } }
   );
   const email     = data?.email     ?? fallback.email;
   const resumeUrl = data?.resumeUrl ?? fallback.resumeUrl;

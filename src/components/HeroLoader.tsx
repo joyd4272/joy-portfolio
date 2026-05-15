@@ -19,7 +19,7 @@ const QUERY = `*[_type == "profile"][0] {
 
 export default async function HeroLoader() {
   const data = await sanityClient.fetch<HeroProfile | null>(
-    QUERY, {}, { next: { revalidate: 0 } }
+    QUERY, {}, { next: { tags: ["profile"], revalidate: false } }
   );
   const profile: HeroProfile = {
     tagline:         data?.tagline         ?? fallback.tagline,

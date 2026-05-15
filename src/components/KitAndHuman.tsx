@@ -15,9 +15,9 @@ const EDU_QUERY   = `*[_type == "profile"][0] { education }`;
 
 export default async function KitAndHuman() {
   const [dockItems, hobbyItems, profileData] = await Promise.all([
-    sanityClient.fetch<DockItem[]>(DOCK_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<HobbyItem[]>(HOBBY_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<{ education: Education } | null>(EDU_QUERY, {}, { next: { revalidate: 0 } }),
+    sanityClient.fetch<DockItem[]>(DOCK_QUERY, {}, { next: { tags: ["dockTool"], revalidate: false } }),
+    sanityClient.fetch<HobbyItem[]>(HOBBY_QUERY, {}, { next: { tags: ["hobby"], revalidate: false } }),
+    sanityClient.fetch<{ education: Education } | null>(EDU_QUERY, {}, { next: { tags: ["profile"], revalidate: false } }),
   ]);
   const dock    = dockItems.length ? dockItems : fallbackDock;
   const hobbies = hobbyItems.length ? hobbyItems : fallbackHobbies;

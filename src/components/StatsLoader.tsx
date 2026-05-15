@@ -7,7 +7,7 @@ type StatItem = { value: string; label: string };
 const QUERY = `*[_type == "stat"] | order(order asc) { value, label }`;
 
 export default async function StatsLoader() {
-  const items = await sanityClient.fetch<StatItem[]>(QUERY, {}, { next: { revalidate: 0 } });
+  const items = await sanityClient.fetch<StatItem[]>(QUERY, {}, { next: { tags: ["stat"], revalidate: false } });
   const stats = items.length ? items : fallback;
   return <Stats stats={stats} />;
 }

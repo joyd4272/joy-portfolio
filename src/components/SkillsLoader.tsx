@@ -9,8 +9,8 @@ const INTRO_QUERY  = `*[_type == "siteSettings"][0] { skillsIntro }.skillsIntro`
 
 export default async function SkillsLoader() {
   const [items, intro] = await Promise.all([
-    sanityClient.fetch<SkillItem[]>(SKILLS_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<string | null>(INTRO_QUERY, {}, { next: { revalidate: 0 } }),
+    sanityClient.fetch<SkillItem[]>(SKILLS_QUERY, {}, { next: { tags: ["skill"], revalidate: false } }),
+    sanityClient.fetch<string | null>(INTRO_QUERY, {}, { next: { tags: ["siteSettings"], revalidate: false } }),
   ]);
   return (
     <Skills

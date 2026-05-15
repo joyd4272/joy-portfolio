@@ -12,8 +12,8 @@ const SUBTITLE_QUERY = `*[_type == "siteSettings"][0] { journeySubtitle }.journe
 
 export default async function JourneyLoader() {
   const [items, subtitle] = await Promise.all([
-    sanityClient.fetch<JourneyItem[]>(JOURNEY_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<string | null>(SUBTITLE_QUERY, {}, { next: { revalidate: 0 } }),
+    sanityClient.fetch<JourneyItem[]>(JOURNEY_QUERY, {}, { next: { tags: ["journeyItem"], revalidate: false } }),
+    sanityClient.fetch<string | null>(SUBTITLE_QUERY, {}, { next: { tags: ["siteSettings"], revalidate: false } }),
   ]);
   return (
     <Journey

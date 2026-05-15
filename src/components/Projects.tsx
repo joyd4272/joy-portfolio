@@ -16,9 +16,9 @@ const URL_QUERY      = `*[_type == "profile"][0] { portfolioUrl }.portfolioUrl`;
 
 export default async function Projects() {
   const [items, intro, portfolioUrl] = await Promise.all([
-    sanityClient.fetch<ProjectItem[]>(PROJECTS_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<string | null>(INTRO_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<string | null>(URL_QUERY, {}, { next: { revalidate: 0 } }),
+    sanityClient.fetch<ProjectItem[]>(PROJECTS_QUERY, {}, { next: { tags: ["project"], revalidate: false } }),
+    sanityClient.fetch<string | null>(INTRO_QUERY, {}, { next: { tags: ["siteSettings"], revalidate: false } }),
+    sanityClient.fetch<string | null>(URL_QUERY, {}, { next: { tags: ["profile"], revalidate: false } }),
   ]);
   const projects      = items.length ? items : fallbackProjects;
   const projectsIntro = intro ?? fallbackIntro;

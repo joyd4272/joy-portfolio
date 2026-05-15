@@ -4,7 +4,7 @@ import { marquee as fallback } from "@/data/portfolio";
 const QUERY = `*[_type == "marqueeItem"] | order(order asc) { label }`;
 
 export default async function Marquee() {
-  const items = await sanityClient.fetch<{ label: string }[]>(QUERY, {}, { next: { revalidate: 0 } });
+  const items = await sanityClient.fetch<{ label: string }[]>(QUERY, {}, { next: { tags: ["marqueeItem"], revalidate: false } });
   const labels = items.length ? items.map((i) => i.label) : fallback;
 
   return (

@@ -12,9 +12,9 @@ const NAV_QUERY     = `*[_type == "navItem"] | order(order asc) { label, href }`
 
 export default async function Footer() {
   const [profileData, socialItems, navItems] = await Promise.all([
-    sanityClient.fetch<ProfileFields | null>(PROFILE_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<SocialItem[]>(SOCIALS_QUERY, {}, { next: { revalidate: 0 } }),
-    sanityClient.fetch<NavItem[]>(NAV_QUERY, {}, { next: { revalidate: 0 } }),
+    sanityClient.fetch<ProfileFields | null>(PROFILE_QUERY, {}, { next: { tags: ["profile"], revalidate: false } }),
+    sanityClient.fetch<SocialItem[]>(SOCIALS_QUERY, {}, { next: { tags: ["socialLink"], revalidate: false } }),
+    sanityClient.fetch<NavItem[]>(NAV_QUERY, {}, { next: { tags: ["navItem"], revalidate: false } }),
   ]);
   const profile = profileData ?? fallbackProfile;
   const socials = socialItems.length ? socialItems : fallbackSocials;
