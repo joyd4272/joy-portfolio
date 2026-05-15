@@ -13,15 +13,30 @@ Personal portfolio site for Joy Das (UI/UX & Product Designer, based in Bengalur
 - **Phone:** +91 8095 624 272
 - **Goal:** Single-page portfolio, fully responsive, content driven from a CMS (Sanity) once design is locked. Deployed on Vercel.
 
-## Hosting (deployed!)
+## Hosting (deployed)
 - **GitHub repo:** https://github.com/joyd4272/joy-portfolio
-  - `main` branch — stable, locked codebase
-  - `deploy/initial` branch — current preview-deploy target
+  - `main` branch — Production. Pre-Sanity Figma-locked build. About to be replaced by Sanity-backed version.
+  - `feature/sanity-cms` branch — Preview. **Fully CMS-wired, webhook live, ready to merge.**
+  - `deploy/initial` branch — retired.
+
+## Sanity webhook (live on preview)
+- Endpoint: `/api/revalidate` (verifies signature using `SANITY_WEBHOOK_SECRET`)
+- Sanity webhook URL: preview deployment + `/api/revalidate`
+- API version: `v2025-02-19`
+- Triggers: Create / Update / Delete (not drafts)
+- Vercel Deployment Protection: **disabled** so webhook can reach the route
+- Round-trip latency: 30-60s (due to Sanity CDN cache layer in production). Accepted for portfolio use; could be made <5s by setting `useCdn: false` in `src/sanity/client.ts` if needed later.
 - **Vercel project:** joy-portfolio (under `joyd4272s-projects`)
-- **Preview URL:** https://joy-portfolio-76xaw2wgj-joyd4272s-projects.vercel.app
-- **Preview alias:** https://joy-portfolio-gamma.vercel.app
-- **Inspect:** https://vercel.com/joyd4272s-projects/joy-portfolio/J7aTVNcCyFg6jC8xNkTL8vtAVQYU
-- **Production:** not promoted yet. Run `vercel --prod` (or promote from the Vercel dashboard) when ready.
+
+### Production (`main`)
+- **Canonical URL (for CV/job applications):** https://joy-portfolio-joyd4272s-projects.vercel.app
+- Aliases: https://joy-portfolio-gamma.vercel.app · https://joy-portfolio-git-main-joyd4272s-projects.vercel.app
+- Production branch: `main`. Pushes to main auto-deploy as production.
+
+### Preview (`feature/sanity-cms`)
+- **Branch alias (auto-updates on each push):** https://joy-portfolio-git-feature-sanity-cms-joyd4272s-projects.vercel.app
+- Specific deployment: https://joy-portfolio-fihqa5ns2-joyd4272s-projects.vercel.app
+- Studio embedded at `/studio` on this preview. CORS origin needs to be added in Sanity for the preview alias.
 
 ## Stack
 - Next.js 16.2.6 (App Router, Turbopack)
@@ -171,11 +186,84 @@ npm run dev
 
 ## Roadmap
 1. Get real LinkedIn URL from Jo and wire it up.
-2. Move project out of OneDrive.
-3. `git init`, push to GitHub via `gh repo create joy-portfolio --public --source=. --remote=origin`.
-4. Deploy via `vercel link` + `vercel --prod`.
-5. Add Sanity CMS — embedded studio at `/studio`. Schemas needed: profile, projects, journey, skills, tools, hobbies, footer links.
-6. Migrate `src/data/portfolio.ts` to read from Sanity.
+2. Move project out of OneDrive (recommended).
+3. ~~Git init + push to GitHub~~ ✅ Done. Repo: https://github.com/joyd4272/joy-portfolio
+4. ~~Vercel deploy~~ ✅ Done. Preview: https://joy-portfolio-gamma.vercel.app
+5. Add Sanity CMS — see "Sanity integration plan" below.
+6. Promote to production via `vercel --prod` (after Sanity is wired and LinkedIn URL is real).
+
+## Sanity integration plan
+
+### Sanity project (created)
+- **Project name:** Joy Das Portfolio
+- **Project ID:** `2lw0wkod`
+- **Organization ID:** `o5KsDY7wm`
+- **Dataset:** `production`
+- **Plan:** Growth Trial (30 days, auto-downgrades to free Hobby — that's the intended end state)
+- **Dashboard:** https://www.sanity.io/manage (look for "Joy Das Portfolio")
+- **CORS origins allowed:**
+  - http://localhost:3000 (Next.js dev)
+  - http://localhost:3333 (Sanity Studio dev — added by `sanity init`)
+  - https://joy-portfolio-gamma.vercel.app (Vercel preview — pending Jo to add)
+  - Production URL to be added after promotion.
+
+### Architecture
+Headless CMS pattern with on-demand revalidation:
+- **Sanity Content Lake** — hosted database for all content (free Hobby plan, ample headroom for this site)
+- **Sanity Studio** — embedded at `/studio` route in this Next.js app
+- **Next.js fetch + ISR** — pages fetch content from Sanity at build time; cached
+- **Revalidation API route** — `/api/revalidate` on this site
+- **Sanity webhook** — calls `/api/revalidate` on every publish, with a shared secret
+- **Visual / Live Preview** (optional second pass) — Sanity's `@sanity/visual-editing` + Next.js Live Mode for in-Studio live preview while editing drafts
+
+Time from "Publish in Studio" → "live on site" should be 1–5 seconds via the revalidation route.
+
+### Schemas to build
+One **singleton** for site-level config + one **document type per repeating collection**:
+
+- `profile` (singleton) — name, role, tagline, intro, currentRole, currentCompany, location, email, phone, address, availability, resumeFile (asset), portfolioUrl
+- `educationItem` (could be embedded in profile or its own type) — degree, school, discipline, period
+- `marqueeItem` — label (ordered)
+- `stat` — value, label (ordered)
+- `skill` — title, body, tags (string array), order
+- `journeyItem` — role, company, location, period, current (bool), bullets (string array), order
+- `project` — number, name, category, blurb, href (URL), background (color), foreground (color), arrowBg, arrowFg, order
+- `dockTool` — name, note, primary (bool), order
+- `hobby` — name, note, icon (predefined list), highlight (bool), order
+- `socialLink` — label, href, order
+- `navItem` — label, href, order
+- `siteSettings` (singleton) — availability text, copyright tagline, og:image asset, etc.
+
+### Dependencies to add
+- `next-sanity` — Next.js integration
+- `@sanity/image-url` — image URL builder
+- `@sanity/vision` — query playground (dev tool, inside studio)
+- `sanity` — studio runtime
+- `@sanity/visual-editing` — optional live preview
+
+### Implementation order
+1. Run `sanity init` with the existing project ID (Jo provides it). Use embedded studio mode.
+2. Create schema files under `src/sanity/schemas/`.
+3. Configure `src/sanity/config.ts` + `src/sanity/client.ts`.
+4. Create `src/app/studio/[[...tool]]/page.tsx` for the embedded Studio.
+5. Migrate content: write a script that imports `src/data/portfolio.ts` and seeds Sanity via the management API. Run once.
+6. Update each section component to fetch from Sanity instead of importing from `src/data/portfolio.ts`. Use `next-sanity`'s `defineQuery` + caching.
+7. Create `src/app/api/revalidate/route.ts` — verifies Sanity webhook signature, calls `revalidateTag()` for the affected content type.
+8. Add Sanity webhook in the Sanity dashboard pointing at `https://<production-url>/api/revalidate` with the shared secret.
+9. Add the production URL + studio URL to Sanity's CORS origins.
+10. (Optional, second pass) Wire up Visual Editing / Live Preview.
+11. Deploy. Test the full loop: edit in studio → publish → see live update in <5s.
+
+### Env vars needed (in Vercel + local `.env.local`)
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`
+- `NEXT_PUBLIC_SANITY_DATASET` (production)
+- `SANITY_API_READ_TOKEN` (server-side, for draft preview)
+- `SANITY_WEBHOOK_SECRET` (shared with the Sanity webhook config)
+
+### Things to NOT do during setup
+- Don't accept the default schemas from `sanity init` — we want our own tailored to the sections.
+- Don't delete `src/data/portfolio.ts` until the migration script is verified.
+- Don't expose any tokens to the client bundle — only `NEXT_PUBLIC_*` vars are safe in `'use client'` code.
 
 ## Tooling on the developer machine
 - node v24.15.0, npm 11.12.1, git 2.54.0

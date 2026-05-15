@@ -1,9 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { profile } from "@/data/portfolio";
 
-export default function Hero() {
+type HeroProfile = {
+  tagline: string;
+  intro: string;
+  currentRole: string;
+  currentCompany: string;
+  location: string;
+  educationSchool: string;
+};
+
+export default function Hero({ profile }: { profile: HeroProfile }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -78,7 +86,7 @@ export default function Hero() {
             <Field label="Based in" value={profile.location} />
             <Field
               label="Education"
-              value={profile.education.school}
+              value={profile.educationSchool}
               short="GCAC, Kolkata"
             />
           </dl>

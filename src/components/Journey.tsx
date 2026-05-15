@@ -1,9 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { journey, journeySubtitle } from "@/data/portfolio";
 
-export default function Journey() {
+type JourneyItem = {
+  role: string; company: string; location: string;
+  period: string; current?: boolean; bullets: string[];
+};
+
+export default function Journey({
+  journey,
+  journeySubtitle,
+}: {
+  journey: JourneyItem[];
+  journeySubtitle: string;
+}) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { nav } from "@/data/portfolio";
 import Logo from "./Logo";
 
-export default function Header() {
+type NavItem = { label: string; href: string };
+
+export default function Header({ nav }: { nav: NavItem[] }) {
   const [open, setOpen] = useState(false);
 
   return (

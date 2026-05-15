@@ -1,6 +1,28 @@
-import { dock, hobbies, profile } from "@/data/portfolio";
+import { sanityClient } from "@/sanity/client";
+import {
+  dock as fallbackDock,
+  hobbies as fallbackHobbies,
+  profile as fallbackProfile,
+} from "@/data/portfolio";
 
-export default function KitAndHuman() {
+type DockItem  = { name: string; note: string; primary?: boolean };
+type HobbyItem = { name: string; note: string; icon: string; highlight?: boolean };
+type Education = { degree: string; discipline: string; school: string; period: string };
+
+const DOCK_QUERY  = `*[_type == "dockTool"] | order(order asc) { name, note, primary }`;
+const HOBBY_QUERY = `*[_type == "hobby"] | order(order asc) { name, note, icon, highlight }`;
+const EDU_QUERY   = `*[_type == "profile"][0] { education }`;
+
+export default async function KitAndHuman() {
+  const [dockItems, hobbyItems, profileData] = await Promise.all([
+    sanityClient.fetch<DockItem[]>(DOCK_QUERY, {}, { next: { tags: ["dockTool"], revalidate: false } }),
+    sanityClient.fetch<HobbyItem[]>(HOBBY_QUERY, {}, { next: { tags: ["hobby"], revalidate: false } }),
+    sanityClient.fetch<{ education: Education } | null>(EDU_QUERY, {}, { next: { tags: ["profile"], revalidate: false } }),
+  ]);
+  const dock    = dockItems.length ? dockItems : fallbackDock;
+  const hobbies = hobbyItems.length ? hobbyItems : fallbackHobbies;
+  const edu     = profileData?.education ?? fallbackProfile.education;
+
   return (
     <section className="bg-background border-t border-[var(--border)]">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 py-16 lg:py-24">
@@ -61,18 +83,18 @@ export default function KitAndHuman() {
             </p>
             <div className="mt-3">
               <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                {profile.education.degree}
+                {edu.degree}
               </h3>
               <p className="mt-3 text-sm sm:text-base font-medium text-black/85">
-                {profile.education.discipline}
+                {edu.discipline}
               </p>
             </div>
             <div className="mt-auto pt-8">
               <p className="text-sm font-semibold">
-                {profile.education.school.replace(", Kolkata", "")}
+                {edu.school.replace(", Kolkata", "")}
               </p>
               <p className="text-xs text-black/60 mt-1">
-                Kolkata · {profile.education.period}
+                Kolkata · {edu.period}
               </p>
             </div>
           </div>
@@ -105,11 +127,7 @@ export default function KitAndHuman() {
   );
 }
 
-function HobbyTile({
-  hobby,
-}: {
-  hobby: { name: string; note: string; icon: string; highlight?: boolean };
-}) {
+function HobbyTile({ hobby }: { hobby: HobbyItem }) {
   return (
     <div
       className={`rounded-2xl p-5 min-h-[120px] sm:min-h-[140px] flex flex-col justify-between ${
@@ -133,57 +151,27 @@ function HobbyTile({
   );
 }
 
-function HobbyIcon({
-  name,
-  className = "",
-}: {
-  name: string;
-  className?: string;
-}) {
+function HobbyIcon({ name, className = "" }: { name: string; className?: string }) {
   const common = {
     xmlns: "http://www.w3.org/2000/svg",
     viewBox: "0 0 24 24",
     fill: "currentColor",
-    "aria-hidden": true,
+    "aria-hidden": true as const,
     className,
   };
   switch (name) {
     case "pencil":
-      return (
-        <svg {...common}>
-          <path d="M3 21l3.5-1L19 7.5 16.5 5 4 17.5 3 21zm15-15.5L20.5 8 22 6.5 17.5 2 16 3.5l2 2z" />
-        </svg>
-      );
+      return <svg {...common}><path d="M3 21l3.5-1L19 7.5 16.5 5 4 17.5 3 21zm15-15.5L20.5 8 22 6.5 17.5 2 16 3.5l2 2z" /></svg>;
     case "music":
-      return (
-        <svg {...common}>
-          <path d="M11 4v11.55A4 4 0 1 0 13 19V7h5V4h-7z" />
-        </svg>
-      );
+      return <svg {...common}><path d="M11 4v11.55A4 4 0 1 0 13 19V7h5V4h-7z" /></svg>;
     case "play":
-      return (
-        <svg {...common}>
-          <path d="M6 4v16l14-8L6 4z" />
-        </svg>
-      );
+      return <svg {...common}><path d="M6 4v16l14-8L6 4z" /></svg>;
     case "mountain":
-      return (
-        <svg {...common}>
-          <path d="M12 3l10 18H2L12 3z" />
-        </svg>
-      );
+      return <svg {...common}><path d="M12 3l10 18H2L12 3z" /></svg>;
     case "plane":
-      return (
-        <svg {...common} viewBox="0 0 24 24">
-          <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1L15 22v-1.5L13 19v-5.5L21 16z" />
-        </svg>
-      );
+      return <svg {...common} viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1L15 22v-1.5L13 19v-5.5L21 16z" /></svg>;
     case "star":
-      return (
-        <svg {...common}>
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
-      );
+      return <svg {...common}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>;
     default:
       return null;
   }

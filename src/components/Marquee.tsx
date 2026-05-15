@@ -1,25 +1,31 @@
-import { marquee } from "@/data/portfolio";
+import { sanityClient } from "@/sanity/client";
+import { marquee as fallback } from "@/data/portfolio";
 
-export default function Marquee() {
+const QUERY = `*[_type == "marqueeItem"] | order(order asc) { label }`;
+
+export default async function Marquee() {
+  const items = await sanityClient.fetch<{ label: string }[]>(QUERY, {}, { next: { tags: ["marqueeItem"], revalidate: false } });
+  const labels = items.length ? items.map((i) => i.label) : fallback;
+
   return (
     <div className="bg-foreground text-background">
       <div className="marquee-viewport py-6 sm:py-7">
         <div className="marquee-track">
-          <Row />
-          <Row aria-hidden />
+          <Row labels={labels} />
+          <Row labels={labels} aria-hidden />
         </div>
       </div>
     </div>
   );
 }
 
-function Row({ "aria-hidden": ariaHidden }: { "aria-hidden"?: boolean } = {}) {
+function Row({ labels, "aria-hidden": ariaHidden }: { labels: string[]; "aria-hidden"?: boolean }) {
   return (
     <ul
       aria-hidden={ariaHidden}
       className="flex items-center gap-10 sm:gap-14 pr-10 sm:pr-14 text-sm tracking-[0.28em] uppercase whitespace-nowrap"
     >
-      {marquee.map((label, i) => (
+      {labels.map((label, i) => (
         <li
           key={`${label}-${i}`}
           className="inline-flex items-center gap-10 sm:gap-14"

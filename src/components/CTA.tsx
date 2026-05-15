@@ -1,6 +1,15 @@
-import { profile } from "@/data/portfolio";
+import { sanityClient } from "@/sanity/client";
+import { profile as fallback } from "@/data/portfolio";
 
-export default function CTA() {
+const QUERY = `*[_type == "profile"][0] { email, resumeUrl }`;
+
+export default async function CTA() {
+  const data = await sanityClient.fetch<{ email: string; resumeUrl: string } | null>(
+    QUERY, {}, { next: { tags: ["profile"], revalidate: false } }
+  );
+  const email     = data?.email     ?? fallback.email;
+  const resumeUrl = data?.resumeUrl ?? fallback.resumeUrl;
+
   return (
     <section
       id="contact"
@@ -22,7 +31,7 @@ export default function CTA() {
 
         <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <a
-            href={`mailto:${profile.email}`}
+            href={`mailto:${email}`}
             className="cta-talk inline-flex w-full sm:w-auto items-center justify-center gap-3 rounded-full bg-[var(--dark-foreground)] text-[var(--dark-bg)] pl-7 pr-3 py-3 text-base font-semibold"
           >
             Let&apos;s talk
@@ -34,7 +43,7 @@ export default function CTA() {
           </a>
 
           <a
-            href={profile.resumeUrl}
+            href={resumeUrl}
             download
             className="cta-download inline-flex w-full sm:w-auto items-center justify-center gap-3 rounded-full border border-[var(--dark-border)] px-7 py-3 text-base font-semibold"
           >
@@ -52,43 +61,16 @@ export default function CTA() {
 
 function ArrowRight() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-      fill="none"
-    >
-      <path
-        d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden fill="none">
+      <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function ArrowDown({ className = "" }: { className?: string }) {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-      fill="none"
-      className={className}
-    >
-      <path
-        d="M7 3V11M7 11L10.5 7.5M7 11L3.5 7.5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" aria-hidden fill="none" className={className}>
+      <path d="M7 3V11M7 11L10.5 7.5M7 11L3.5 7.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

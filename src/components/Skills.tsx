@@ -1,11 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { skills, skillsIntro } from "@/data/portfolio";
+
+type SkillItem = { title: string; body: string; tags: string[] };
 
 const HEADING = "What I bring to the table.";
 
-export default function Skills() {
+export default function Skills({
+  skills,
+  skillsIntro,
+}: {
+  skills: SkillItem[];
+  skillsIntro: string;
+}) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
