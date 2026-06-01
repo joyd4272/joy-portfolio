@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f3eee5;
+  --background: #ffffff;
   --surface: #ffffff;
   --foreground: #111111;
   --foreground-muted: #4a4a4a;
@@ -620,5 +620,36 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .dock-track {
     animation-duration: 60s;
+  }
+}
+
+/* ====== Glitch text effect ====== */
+@keyframes glitch-anim {
+  0%,  100% { text-shadow: none; }
+  18%        { text-shadow: -3px 0 #ff0040, 3px 0 #00e5ff; }
+  20%        { text-shadow:  3px 0 #ff0040, -3px 0 #00e5ff; }
+  38%        { text-shadow: none; }
+  55%        { text-shadow: -2px 0 #00e5ff, 2px 0 #ff0040; }
+  57%        { text-shadow:  2px 0 #00e5ff, -2px 0 #ff0040; }
+  75%        { text-shadow: none; }
+  83%        { text-shadow: -3px 0 #ff0040; }
+  85%        { text-shadow:  3px 0 #00e5ff; }
+  87%        { text-shadow: none; }
+}
+
+/* Direct hover — hero h1 */
+.glitch-hover:hover {
+  animation: glitch-anim 0.55s steps(1) infinite;
+}
+
+/* Card group hover — project name h3 fires when the whole card is hovered */
+.group:hover .glitch-group {
+  animation: glitch-anim 0.55s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-hover:hover,
+  .group:hover .glitch-group {
+    animation: none;
   }
 }

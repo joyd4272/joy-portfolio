@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
+
+const SplineCube = dynamic(() => import("./SplineCube"), { ssr: false });
 
 type HeroProfile = {
   tagline: string;
@@ -55,7 +58,7 @@ export default function Hero({ profile }: { profile: HeroProfile }) {
     <section
       id="about"
       ref={sectionRef}
-      className="bg-background"
+      className="relative bg-black text-white"
       style={{ ["--hero-progress" as never]: "0" }}
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8 pt-10 pb-12 lg:pt-16 lg:pb-20">
@@ -63,7 +66,7 @@ export default function Hero({ profile }: { profile: HeroProfile }) {
           [ I am ]
         </p>
 
-        <h1 className="mt-6 font-extrabold leading-[0.9] tracking-[-0.02em] text-[clamp(72px,16vw,260px)] flex flex-col lg:flex-row lg:flex-wrap lg:items-baseline">
+        <h1 className="glitch-hover mt-6 font-extrabold leading-[0.9] tracking-[-0.02em] text-[clamp(72px,16vw,260px)] flex flex-col lg:flex-row lg:flex-wrap lg:items-baseline">
           <span className="hero-pane-left inline-block">Joy</span>
           <span className="hero-pane-right inline-block lg:ml-[0.12em]">Das</span>
         </h1>
@@ -91,6 +94,14 @@ export default function Hero({ profile }: { profile: HeroProfile }) {
             />
           </dl>
         </div>
+      </div>
+
+      {/* Decorative cube — absolutely positioned, overlaps the right edge */}
+      <div
+        className="hidden md:block absolute top-0 right-0 w-[300px] lg:w-[360px] xl:w-[420px] aspect-square pointer-events-auto z-10"
+        aria-hidden="true"
+      >
+        <SplineCube className="w-full h-full" />
       </div>
     </section>
   );

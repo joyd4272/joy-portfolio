@@ -9,7 +9,17 @@ export default defineType({
     defineField({ name: "name", title: "Name", type: "string" }),
     defineField({ name: "category", title: "Category", type: "string" }),
     defineField({ name: "blurb", title: "Blurb", type: "text", rows: 2 }),
-    defineField({ name: "href", title: "Case study URL", type: "url" }),
+    defineField({
+      name: "href",
+      title: "Case study URL",
+      type: "string",
+      validation: (Rule) =>
+        Rule.required().custom((value) => {
+          if (typeof value !== "string") return "URL is required";
+          const ok = /^(https?:\/\/.+|\/.+)$/.test(value);
+          return ok || "Must be a full URL (https://...) or a root-relative path (/work/...)";
+        }),
+    }),
     defineField({ name: "background", title: "Background color", type: "string" }),
     defineField({ name: "foreground", title: "Foreground color", type: "string" }),
     defineField({ name: "arrowBg", title: "Arrow background color", type: "string" }),

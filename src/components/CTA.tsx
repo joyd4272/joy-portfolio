@@ -1,14 +1,30 @@
 import { sanityClient } from "@/sanity/client";
 import { profile as fallback } from "@/data/portfolio";
 
-const QUERY = `*[_type == "profile"][0] { email, resumeUrl }`;
+// resumeFileUrl is the dereferenced CDN URL of an uploaded PDF (takes precedence).
+// resumeUrl is a free-form string path/URL (fallback for the Sanity layer).
+// If neither is set, fall back to the static PDF in /public via portfolio.ts.
+const QUERY = `*[_type == "profile"][0] {
+  email,
+  resumeUrl,
+  "resumeFileUrl": resumeFile.asset->url
+}`;
+
+type ProfileQuery = {
+  email: string | null;
+  resumeUrl: string | null;
+  resumeFileUrl: string | null;
+};
 
 export default async function CTA() {
-  const data = await sanityClient.fetch<{ email: string; resumeUrl: string } | null>(
+  const data = await sanityClient.fetch<ProfileQuery | null>(
     QUERY, {}, { next: { tags: ["profile"], revalidate: false } }
   );
   const email     = data?.email     ?? fallback.email;
-  const resumeUrl = data?.resumeUrl ?? fallback.resumeUrl;
+  const resumeUrl =
+    data?.resumeFileUrl ||
+    data?.resumeUrl ||
+    fallback.resumeUrl;
 
   return (
     <section

@@ -185,75 +185,99 @@ export const projectsIntro =
 export const projects = [
   {
     number: "01",
-    name: "Builder",
-    category: "Content Platform · 2024",
-    blurb:
-      "A modern, intuitive, scalable Content Builder that enables non technical users to design digital signage layouts with ease.",
-    href: "https://designnerd-joy.webflow.io/builder",
-    background: "var(--color-card-builder)",
-    foreground: "#1a1a1a",
-    arrowBg: "#0a0a0a",
-    arrowFg: "#ffffff",
-  },
-  {
-    number: "02",
     name: "Book it",
     category: "Workplace · 2023",
     blurb:
       "Helps users manage and book workspace with less effort and more confidence.",
-    href: "https://designnerd-joy.webflow.io/book-it",
+    href: "/work/book-it",
     background: "var(--color-card-bookit)",
     foreground: "#1a1a1a",
     arrowBg: "#0a0a0a",
     arrowFg: "#ffffff",
   },
   {
+    number: "02",
+    name: "Builder",
+    category: "Content Platform · 2024",
+    blurb:
+      "A modern, intuitive, scalable Content Builder that enables non technical users to design digital signage layouts with ease.",
+    href: "/work/builder",
+    background: "var(--color-card-builder)",
+    foreground: "#1a1a1a",
+    arrowBg: "#0a0a0a",
+    arrowFg: "#ffffff",
+  },
+  {
     number: "03",
+    name: "HMI Generator",
+    category: "Automotive · Tooling · 2024",
+    blurb:
+      "A tool for designing and exporting in-vehicle HMI layouts — from concept screens to production-ready specs.",
+    href: "/work/hmi",
+    background: "#1a2332",
+    foreground: "#ffffff",
+    arrowBg: "#ffffff",
+    arrowFg: "#1a2332",
+  },
+  {
+    number: "04",
     name: "Way Finder",
     category: "Navigation · 2023",
     blurb:
       "Enables employees to seamlessly navigate, locate, and book workspace with purpose and ease.",
-    href: "https://designnerd-joy.webflow.io/way-finder",
+    href: "/work/way-finder",
     background: "#1f4dff",
     foreground: "#ffffff",
     arrowBg: "#ffffff",
     arrowFg: "#1f4dff",
   },
   {
-    number: "04",
+    number: "05",
+    name: "One",
+    category: "Fintech · Rural · 2022",
+    blurb:
+      "Empowering rural communities by turning everyday cash withdrawals into opportunities to earn, save, and grow.",
+    href: "/work/one",
+    background: "var(--color-card-one)",
+    foreground: "#fff8f3",
+    arrowBg: "#ffffff",
+    arrowFg: "#ff5b1f",
+  },
+  {
+    number: "06",
     name: "Clarity",
     category: "IoT · Analytics · 2023",
     blurb:
       "Provides insights from workspace and IOT sensors for smarter workplace choices.",
-    href: "https://designnerd-joy.webflow.io/clarity-2",
+    href: "/work/clarity",
     background: "#0a0a0a",
     foreground: "#f5f1ea",
     arrowBg: "#ffffff",
     arrowFg: "#0a0a0a",
   },
   {
-    number: "05",
+    number: "07",
+    name: "OTT News Aggregator",
+    category: "Streaming · News · 2024",
+    blurb:
+      "A unified surface for streaming and news content — curating signal across platforms into one focused feed.",
+    href: "/work/ott-news",
+    background: "#111111",
+    foreground: "#f5f5f5",
+    arrowBg: "#ff5b1f",
+    arrowFg: "#ffffff",
+  },
+  {
+    number: "08",
     name: "Digital Signage",
     category: "Enterprise · 2022",
     blurb:
       "Supporting relevance, speed, and precision for modern content and screen management solutions.",
-    href: "https://designnerd-joy.webflow.io/digital-signage",
+    href: "/work/digital-signage",
     background: "var(--color-card-signage)",
     foreground: "#1a1a1a",
     arrowBg: "#0a0a0a",
     arrowFg: "#ffffff",
-  },
-  {
-    number: "06",
-    name: "One",
-    category: "Fintech · Rural · 2022",
-    blurb:
-      "Empowering rural communities by turning everyday cash withdrawals into opportunities to earn, save, and grow.",
-    href: "https://designnerd-joy.webflow.io/one-finance",
-    background: "var(--color-card-one)",
-    foreground: "#fff8f3",
-    arrowBg: "#ffffff",
-    arrowFg: "#ff5b1f",
   },
 ];
 
@@ -286,12 +310,11 @@ export const hobbies = [
 export const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/joy-das-3538a34a/" },
   { label: "Old projects", href: "https://designnerd.myportfolio.com/" },
-  { label: "Webflow", href: "https://designnerd-joy.webflow.io/" },
 ];
 
 export const nav = [
   { label: "Skills", href: "#skills" },
   { label: "Experience", href: "#experience" },
-  { label: "Recent Project", href: "#projects" },
+  { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
 ];

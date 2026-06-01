@@ -16,7 +16,19 @@ export default defineType({
     defineField({ name: "phone", title: "Phone", type: "string" }),
     defineField({ name: "address", title: "Address", type: "string" }),
     defineField({ name: "availability", title: "Availability text", type: "string" }),
-    defineField({ name: "resumeUrl", title: "Résumé URL / path", type: "string" }),
+    defineField({
+      name: "resumeFile",
+      title: "Resume PDF (upload)",
+      description: "Drop a PDF here to host it on Sanity CDN. Overrides Resume URL when set. To revert to the static /public PDF, delete this file.",
+      type: "file",
+      options: { accept: ".pdf" },
+    }),
+    defineField({
+      name: "resumeUrl",
+      title: "Resume URL / path",
+      description: "Used only when no PDF is uploaded above. Leave as /Joy_Das_Resume.pdf to serve the static file from public/, or point at an external URL.",
+      type: "string",
+    }),
     defineField({ name: "portfolioUrl", title: "Portfolio URL", type: "url" }),
     defineField({
       name: "education",
