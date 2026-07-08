@@ -186,7 +186,7 @@ export const projects = [
   {
     number: "01",
     name: "Book it",
-    category: "Workplace · 2023",
+    category: "Workplace 2023",
     blurb:
       "Helps users manage and book workspace with less effort and more confidence.",
     href: "/work/book-it",
@@ -198,7 +198,7 @@ export const projects = [
   {
     number: "02",
     name: "Builder",
-    category: "Content Platform · 2024",
+    category: "Content Platform 2024",
     blurb:
       "A modern, intuitive, scalable Content Builder that enables non technical users to design digital signage layouts with ease.",
     href: "/work/builder",
@@ -210,9 +210,9 @@ export const projects = [
   {
     number: "03",
     name: "HMI Generator",
-    category: "Automotive · Tooling · 2024",
+    category: "Automotive Tooling 2024",
     blurb:
-      "A tool for designing and exporting in-vehicle HMI layouts — from concept screens to production-ready specs.",
+      "A tool for designing and exporting in vehicle HMI layouts, from concept screens to production ready specs.",
     href: "/work/hmi",
     background: "#1a2332",
     foreground: "#ffffff",
@@ -222,7 +222,7 @@ export const projects = [
   {
     number: "04",
     name: "Way Finder",
-    category: "Navigation · 2023",
+    category: "Navigation 2023",
     blurb:
       "Enables employees to seamlessly navigate, locate, and book workspace with purpose and ease.",
     href: "/work/way-finder",
@@ -234,7 +234,7 @@ export const projects = [
   {
     number: "05",
     name: "One",
-    category: "Fintech · Rural · 2022",
+    category: "Fintech Rural 2022",
     blurb:
       "Empowering rural communities by turning everyday cash withdrawals into opportunities to earn, save, and grow.",
     href: "/work/one",
@@ -246,7 +246,7 @@ export const projects = [
   {
     number: "06",
     name: "Clarity",
-    category: "IoT · Analytics · 2023",
+    category: "IoT Analytics 2023",
     blurb:
       "Provides insights from workspace and IOT sensors for smarter workplace choices.",
     href: "/work/clarity",
@@ -258,9 +258,9 @@ export const projects = [
   {
     number: "07",
     name: "OTT News Aggregator",
-    category: "Streaming · News · 2024",
+    category: "Streaming News 2024",
     blurb:
-      "A unified surface for streaming and news content — curating signal across platforms into one focused feed.",
+      "A unified surface for streaming and news content, curating signal across platforms into one focused feed.",
     href: "/work/ott-news",
     background: "#111111",
     foreground: "#f5f5f5",
@@ -270,7 +270,7 @@ export const projects = [
   {
     number: "08",
     name: "Digital Signage",
-    category: "Enterprise · 2022",
+    category: "Enterprise 2022",
     blurb:
       "Supporting relevance, speed, and precision for modern content and screen management solutions.",
     href: "/work/digital-signage",
@@ -278,6 +278,18 @@ export const projects = [
     foreground: "#1a1a1a",
     arrowBg: "#0a0a0a",
     arrowFg: "#ffffff",
+  },
+  {
+    number: "09",
+    name: "Neer",
+    category: "Smart hardware 2025",
+    blurb:
+      "A smart water meter for Indian homes with live flow, leak alerts, and one tap valve control from a conversational app.",
+    href: "/work/neer",
+    background: "#3B95FF",
+    foreground: "#ffffff",
+    arrowBg: "#0C0F1A",
+    arrowFg: "#3B95FF",
   },
 ];
 

@@ -15,25 +15,36 @@ const PROJECTS_QUERY = `*[_type == "project"] | order(order asc) { number, name,
 const INTRO_QUERY    = `*[_type == "siteSettings"][0] { projectsIntro }.projectsIntro`;
 const URL_QUERY      = `*[_type == "profile"][0] { portfolioUrl }.portfolioUrl`;
 
+// In dev: fetch fresh on every request so Studio edits appear on the next reload.
+// In prod: cache indefinitely, busted by the Sanity → /api/revalidate webhook.
+const revalidate = process.env.NODE_ENV === "development" ? 0 : false;
+
 export default async function Projects() {
   const [items, intro, portfolioUrl] = await Promise.all([
-    sanityClient.fetch<ProjectItem[]>(PROJECTS_QUERY, {}, { next: { tags: ["project"], revalidate: false } }),
-    sanityClient.fetch<string | null>(INTRO_QUERY, {}, { next: { tags: ["siteSettings"], revalidate: false } }),
-    sanityClient.fetch<string | null>(URL_QUERY, {}, { next: { tags: ["profile"], revalidate: false } }),
+    sanityClient.fetch<ProjectItem[]>(PROJECTS_QUERY, {}, { next: { tags: ["project"], revalidate } }),
+    sanityClient.fetch<string | null>(INTRO_QUERY, {}, { next: { tags: ["siteSettings"], revalidate } }),
+    sanityClient.fetch<string | null>(URL_QUERY, {}, { next: { tags: ["profile"], revalidate } }),
   ]);
   const projects      = items.length ? items : fallbackProjects;
   const projectsIntro = intro ?? fallbackIntro;
   const portfolioUrl_ = portfolioUrl ?? fallbackProfile.portfolioUrl;
 
-  // Editorial rhythm matches the Figma, extended for 8 projects:
-  //   Row 1: Builder (2/3) + Book it (1/3)
-  //   Row 2: Way Finder + Clarity (50/50)
-  //   Row 3: Digital Signage (1/3) + One (2/3)
-  //   Row 4: OTT News + HMI (50/50)
-  const [builder, bookit] = projects.slice(0, 2);
-  const row2 = projects.slice(2, 4);
-  const [signage, one] = projects.slice(4, 6);
-  const row4 = projects.slice(6, 8);
+  // 9-card bento (B9):
+  //   Row 1-2: Book it (2/3, 2 rows tall anchor) + Builder (1/3) + HMI (1/3) stacked
+  //   Row 3:   Way Finder (1/2) + Clarity (1/2)
+  //   Row 4:   One (1/3) + OTT News (1/3) + Digital Signage (1/3)
+  //   Row 5:   Neer (full width — wide finale for the HTML build)
+  const [
+    bookit,
+    builder,
+    hmi,
+    wayFinder,
+    one,
+    clarity,
+    ottNews,
+    signage,
+    neer,
+  ] = projects;
 
   return (
     <section
@@ -55,31 +66,35 @@ export default async function Projects() {
         </div>
 
         <div className="mt-10 lg:mt-14 space-y-4 sm:space-y-5">
-          {/* Row 1: Builder 2/3 + Book it 1/3 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-            <Card project={builder} className="md:col-span-2" />
-            <Card project={bookit} className="md:col-span-1" />
+          {/* Rows 1-2: Book it (2/3, 2 rows tall) + Builder / HMI stacked (1/3 each) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:auto-rows-[360px]">
+            {bookit && (
+              <Card
+                project={bookit}
+                className="md:col-span-2 md:row-span-2 md:min-h-0"
+              />
+            )}
+            {builder && <Card project={builder} className="md:min-h-0" />}
+            {hmi && <Card project={hmi} className="md:min-h-0" />}
           </div>
 
-          {/* Row 2: Way Finder + Clarity, equal */}
+          {/* Row 3: Way Finder + Clarity, equal */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-            {row2.map((p) => (
-              <Card key={p.number} project={p} />
-            ))}
+            {wayFinder && <Card project={wayFinder} />}
+            {clarity && <Card project={clarity} />}
           </div>
 
-          {/* Row 3: Digital Signage 1/3 + One 2/3 */}
+          {/* Row 4: One + OTT News + Digital Signage, thirds */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-            <Card project={signage} className="md:col-span-1" />
-            <Card project={one} className="md:col-span-2" />
+            {one && <Card project={one} />}
+            {ottNews && <Card project={ottNews} />}
+            {signage && <Card project={signage} />}
           </div>
 
-          {/* Row 4: OTT News + HMI Generator, equal */}
-          {row4.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-              {row4.map((p) => (
-                <Card key={p.number} project={p} />
-              ))}
+          {/* Row 5: Neer — wide finale for the HTML build */}
+          {neer && (
+            <div className="grid grid-cols-1">
+              <Card project={neer} />
             </div>
           )}
         </div>

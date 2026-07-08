@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { source: "/work/book-it", destination: "/work/book-it/index.html" },
       { source: "/work/ott-news", destination: "/work/ott-news/index.html" },
       { source: "/work/hmi", destination: "/work/hmi/index.html" },
+      { source: "/work/neer", destination: "/work/neer/index.html" },
     ];
   },
 };
