@@ -6,7 +6,7 @@ This file is read by Claude (and is useful for any developer/AI assistant pickin
 
 ---
 
-## ⚡ Session handoff — last updated 2026-05-30
+## ⚡ Session handoff — last updated 2026-07-08
 
 This is the operations manual. Read it top to bottom before touching anything. After reading you should be able to: add case studies, ship to production, edit content in Sanity, tweak design, recover from breakage, and scale the homepage to N projects — without re-reading chat history.
 
@@ -33,33 +33,42 @@ The repo lives at `C:\Users\Think\OneDrive\Desktop\Resume\Joy_Das\joy-portfolio`
 
 ### 1. Current state
 
-**Working locally** (verified `npm run dev` at `http://localhost:3000`):
-- 6 internal case study pages routed at `/work/<slug>`: builder, way-finder, clarity, digital-signage, one (image-stack template) + book-it (static HTML build with Next.js rewrite).
-- Homepage project cards all link to internal `/work/<slug>` routes (Sanity-driven + `src/data/portfolio.ts` fallback).
-- Sanity Project schema patched: `href` field accepts both `https://...` and `/`-prefixed paths.
-- Hero has a Spline cube iframe on the right (the React lib failed due to a Turbopack/protobuf conflict — see gotchas).
-- Site `--background` token switched from cream (`#f3eee5`) to pure white (`#ffffff`). Hero and `/work/*` pages remain `bg-black`.
+**Production live** (commit 1e23a15, pushed 2026-07-08):
+- 9 case study pages at `/work/<slug>`: book-it, builder, hmi, way-finder, one, clarity, ott-news, digital-signage, neer.
+  - Image-stack (React template): builder (22 imgs), way-finder (10), clarity (1), digital-signage (18), one (1).
+  - Static HTML builds (Next.js rewrites): book-it, ott-news, hmi, neer.
+- Homepage uses a 9-card bento grid (src/components/Projects.tsx):
+  - Row 1–2: Book it (2/3, 2-rows tall via md:row-span-2) + Builder (1/3) / HMI (1/3) stacked
+  - Row 3: Way Finder (1/2) + Clarity (1/2)
+  - Row 4: One (1/3) + OTT News (1/3) + Digital Signage (1/3)
+  - Row 5: Neer (full-width finale)
+- Hero: black bg, Spline cube iframe (iframe embed — React lib crashes Turbopack, see gotchas), glitch effect on hover for "Joy Das" h1 and project card h3s.
+- Site `--background` = pure white (`#ffffff`). Hero and `/work/*` pages = `bg-black`.
+- Sanity Project schema: `href` field is `type: "string"` with custom regex validator (accepts both `https://...` and `/`-prefixed paths).
+- Nav order: Skills → Experience → Projects → Contact me.
+- Resume: uploaded PDF on Sanity CDN (resumeFile field on profile doc).
+- Socials: LinkedIn + Old projects (Webflow removed).
+- Dev-mode Sanity fetch: `revalidate: 0` in dev, `revalidate: false` in prod — Studio edits appear on localhost without nuking .next.
 
-**Sanity production data** (verified via direct GROQ on 2026-05-30):
-All 6 Project docs published with internal hrefs:
-- Clarity → `/work/clarity`
-- Digital Signage → `/work/digital-signage`
-- One Finance → `/work/one`
-- Builder → `/work/builder`
-- Way Finder → `/work/way-finder`
-- Book it → `/work/book-it`
-
-**NOT yet on production.** None of the case-study work has been pushed to `main`. Production at https://joy-portfolio-joyd4272s-projects.vercel.app still serves the pre-case-study site with Webflow card links. Section 4 below walks through shipping.
+**Sanity production data** (9 Project docs, all published, order asc):
+1. Book it → `/work/book-it`
+2. Builder → `/work/builder`
+3. HMI Generator → `/work/hmi`
+4. Way Finder → `/work/way-finder`
+5. One Finance → `/work/one`
+6. Clarity → `/work/clarity`
+7. OTT News Aggregator → `/work/ott-news`
+8. Digital Signage → `/work/digital-signage`
+9. Neer → `/work/neer`
 
 ### 2. Open tasks
 
 In priority order — each is self-contained, can be completed in any session:
 
-1. **Ship the current local state to production.** See Section 4.
-2. **Nudge the Hero Spline cube.** Currently overlaps the "AT: RDZ-NFS..." experience block. Move up, push right, shrink one size step. The wrapper div lives inside `src/components/Hero.tsx`. Current classes include `top-4 lg:top-6`, `-right-8 md:-right-16 lg:-right-20`, `w-[340px] lg:w-[420px] xl:w-[480px]`. Iterate visually.
-3. **OTT case study.** Recipe A if image frames, Recipe B if HTML build.
-4. **Future projects** (TBD names) — same recipes.
-5. **Eventually:** add custom domain (joydas.com / joydas.dev), `og:image` for social previews, Sanity Visual Editing for in-Studio live preview.
+1. **Custom domain** (joydas.com / joydas.dev) — add in Vercel dashboard → Settings → Domains.
+2. **og:image** for social previews — add `<meta og:image>` in `src/app/layout.tsx`, host the image in `public/`.
+3. **Sanity Visual Editing** — in-Studio live preview (optional, second pass).
+4. **Future projects** — use Recipe A (image-stack) or Recipe B (static HTML) as needed. Update bento grid in Projects.tsx if adding a 10th card.
 
 ### 3. Daily workflow & restart matrix
 
